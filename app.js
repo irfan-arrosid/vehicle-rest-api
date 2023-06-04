@@ -3,7 +3,7 @@ const app = express()
 const port = 3000
 require('dotenv').config()
 
-const db = require('./config/database.js')
+const db = require('./config/database')
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
 // Connecting to the database
 db.connect()
 
+// Listening server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 })
