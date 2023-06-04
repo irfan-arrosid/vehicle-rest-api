@@ -8,7 +8,7 @@ router.post('/login', userController.login)
 
 router.get('/users', userController.getUsers)
 router.get('/users/:id', userController.getUserById)
-// router.patch('/users/:id')
+router.patch('/users/:id', userController.updateUser)
 // router.delete('/users/:id')
 
 module.exports = router

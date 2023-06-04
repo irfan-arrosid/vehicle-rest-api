@@ -130,9 +130,47 @@ const getUserById = async (req, res) => {
     }
 }
 
+// PATCH /users/:id
+const updateUser = async (req, res) =>  {
+    try {
+        const { id } = req.params
+        const { name, email, password, is_admin} = req.body
+    
+        const user = await User.findByPk(id)
+        if(!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            })
+        }
+    
+        // Hashing a new password
+        const salt = await bcrypt.genSalt()
+        const hashedPassword = password ? await bcrypt.hash(password, salt) : user.password
+    
+        // Update user data
+        await user.update({
+            name,
+            email,
+            password: hashedPassword,
+            is_admin
+        })
+    
+        res.status(201).json({
+            message: 'Update user data is success',
+            data: user
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
 module.exports = {
     register,
     login,
     getUsers,
-    getUserById
+    getUserById,
+    updateUser
 }
