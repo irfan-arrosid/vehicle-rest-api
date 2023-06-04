@@ -18,23 +18,63 @@ const generateToken = (user) => {
     return jwt.sign(payload, process.env.JWT_SECRET, options)
 }
 
+// POST /register
 const register = async (req, res) => {
     try {
         const { name, email, password } = req.body
 
+        // Hashing password
         const salt = await bcrypt.genSalt()
         const hashedPassword = await bcrypt.hash(password, salt)
 
+        // Create a new user
         const user = await User.create({
             name: name,
             email: email,
             password: hashedPassword
         })
 
+        // Generate token
         const token = generateToken(user)
 
         res.status(201).json({
-            message: 'Create new user is success',
+            message: 'Register new user is success',
+            token: token
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// POST /login
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body
+
+        // Find user by email
+        const user = await User.findOne({ where: { email } })
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            })
+        }
+
+        // Password verification
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                message: 'Invalid password'
+            })
+        }
+
+        // Generate token
+        const token = generateToken(user)
+
+        res.status(201).json({
+            message: 'Login is success',
             token: token
         })
     } catch (error) {
@@ -46,5 +86,6 @@ const register = async (req, res) => {
 }
 
 module.exports = {
-    register
+    register,
+    login,
 }
