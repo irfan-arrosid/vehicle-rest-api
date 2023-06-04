@@ -85,7 +85,54 @@ const login = async (req, res) => {
     }
 }
 
+// GET /users
+const getUsers = async (req, res) => {
+    try {
+        // Find all users
+        const users = await User.findAll({
+            attributes: ['id', 'name', 'email', 'is_admin']
+        })
+
+        res.status(200).json({
+            message: 'Get users is success',
+            data: users
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// GET /users/:id
+const getUserById = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        //Find user by id
+        const user = await User.findByPk(id)
+        if(!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            })
+        }
+
+        res.status(200).json({
+            message: 'Get user is success',
+            data: user
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
 module.exports = {
     register,
     login,
+    getUsers,
+    getUserById
 }
