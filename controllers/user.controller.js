@@ -133,9 +133,19 @@ const getUserById = async (req, res) => {
 // PATCH /users/:id
 const updateUser = async (req, res) =>  {
     try {
+        // Admin only
+        /*
+        if(!req.user.is_admin) {
+            return res.status(403).json({
+                message: 'Forbidden access'
+            })
+        }
+        */
+
         const { id } = req.params
         const { name, email, password, is_admin} = req.body
     
+        // Find user by ID
         const user = await User.findByPk(id)
         if(!user) {
             return res.status(404).json({
@@ -167,10 +177,48 @@ const updateUser = async (req, res) =>  {
     }
 }
 
+// DELETE /users/:id
+const deleteUser = async (req, res) => {
+    try {
+        // Admin only
+        /*
+        if(!req.user.is_admin) {
+            return res.status(403).json({
+                message: 'Forbidden access'
+            })
+        }
+        */
+
+        const { id } = req.params
+        
+        // Find user by ID
+        const user = await User.findByPk(id)
+        if(!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            })
+        }
+
+        // Delete user
+        await user.destroy()
+
+        res.status(201).json({
+            message: 'Delete user is success',
+            data: user
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
 module.exports = {
     register,
     login,
     getUsers,
     getUserById,
-    updateUser
+    updateUser,
+    deleteUser
 }
