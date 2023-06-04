@@ -1,6 +1,9 @@
 CREATE TABLE "users" (
   "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
+  "email" varchar NOT NULL,
+  "password" varchar NOT NULL,
+  "refresh_token" text,
   "is_admin" bool,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
   "updated_at" timestamptz NOT NULL DEFAULT (now())

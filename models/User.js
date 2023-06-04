@@ -14,9 +14,20 @@ const User = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         is_admin: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+        },
+        refresh_token: {
+            type: DataTypes.TEXT,
         },
         created_at: {
             type: DataTypes.DATE,
