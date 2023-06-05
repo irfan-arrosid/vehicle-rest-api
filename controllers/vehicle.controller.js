@@ -138,10 +138,94 @@ const getVehicleTypeById = async (req, res) => {
     }
 }
 
+// GET /vehicle-models
+const getVehicleModels = async (req, res) => {
+    try {
+        const vehicleModels = await VehicleModel.findAll({
+            attributes: ['name', 'id']
+        })
+
+        res.status(200).json({
+            message: 'Get vehicle models is success',
+            data: vehicleModels
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// GET /vehicle-models/:id
+const getVehicleModelById = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const vehicleModel = await VehicleModel.findByPk(id, {
+            attributes: ['name', 'id']
+        })
+
+        res.status(200).json({
+            message: 'Get vehicle model is success',
+            data: vehicleModel
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// GET /vehicle-years
+const getVehicleYears = async (req, res) => {
+    try {
+        const vehicleYears = await VehicleYear.findAll({
+            attributes: ['year', 'id']
+        })
+
+        res.status(200).json({
+            message: 'Get vehicle years is success',
+            data: vehicleYears
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// GET /vehicle-years/:id
+const getVehicleYearById = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const vehicleYear = await VehicleYear.findByPk(id, {
+            attributes: ['year', 'id']
+        })
+
+        res.status(200).json({
+            message: 'Get vehicle year is success',
+            data: vehicleYear
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
 module.exports = {
     createVehicle,
     getVehicleBrands,
     getVehicleBrandById,
     getVehicleTypes,
-    getVehicleTypeById
+    getVehicleTypeById,
+    getVehicleModels,
+    getVehicleModelById,
+    getVehicleYears,
+    getVehicleYearById
 }
