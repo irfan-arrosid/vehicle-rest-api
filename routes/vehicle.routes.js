@@ -17,5 +17,7 @@ router.get('/vehicle-models/:id', vehicleController.getVehicleModelById)
 // // vehicle-years
 router.get('/vehicle-years', vehicleController.getVehicleYears)
 router.get('/vehicle-years/:id', vehicleController.getVehicleYearById)
+// // pricelist
+router.get('/pricelist/:id', vehicleController.getPricelistById)
 
 module.exports = router

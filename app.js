@@ -14,10 +14,6 @@ app.use(express.json())
 app.use('/', userRoutes)
 app.use('/', vehicleRoutes)
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
-
 // Connecting to the database
 const dbConnect = async() => {
     try {

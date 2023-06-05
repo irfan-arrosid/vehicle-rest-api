@@ -16,33 +16,33 @@ const createVehicle = async (req, res) => {
 
     try {
         await sequelize.transaction(async (t) => {
-            // Input data to vehicle_brands table
-            const vehicleBrand = await VehicleBrand.create(
-                { name: brandName },
-                { transaction: t }
-            )
+            // Create data to vehicle_brands table
+            const [vehicleBrand] = await VehicleBrand.findOrCreate({
+                where: { name: brandName },
+                transaction: t
+            })
 
-            // Input data to vehicle_types table using foreignKey
-            const vehicleType = await VehicleType.create(
-                { name: typeName, brandId: vehicleBrand.id },
-                { transaction: t }
-            )
+            // Create data to vehicle_types table using foreignKey
+            const [vehicleType] = await VehicleType.findOrCreate({
+                where: { name: typeName },
+                transaction: t
+            })
 
-            // Input data to vehicle_models table using foreignKey
-            const vehicleModel = await VehicleModel.create(
-                { name: modelName, typeId: vehicleType.id },
-                { transaction: t }
-            )
+            // Create data to vehicle_models table using foreignKey
+            const [vehicleModel] = await VehicleModel.findOrCreate({
+                where: { name: modelName },
+                transaction: t
+            })
 
-            // Input data to vehicle_years table
-            const vehicleYear = await VehicleYear.create(
-                { year },
-                { transaction: t }
-            )
+            // Create data to vehicle_years table
+            const [vehicleYear] = await VehicleYear.findOrCreate({
+                where: { year },
+                transaction: t
+            })
 
-            // Input data to pricelist
+            // Create data to pricelist
             await Pricelist.create(
-                { yearId: vehicleYear.id, modelId: vehicleModel.id },
+                { yearId: vehicleYear.yearId, modelId: vehicleModel.modelId },
                 { transaction: t }
             )
         })
@@ -61,13 +61,28 @@ const createVehicle = async (req, res) => {
 // GET /vehicle-brands
 const getVehicleBrands = async (req, res) => {
     try {
+        const { limit = 10, skip = 0 } = req.query
+
+        const totalCount = await VehicleBrand.count()
+
         const vehicleBrands = await VehicleBrand.findAll({
-            attributes: ['name', 'id']
+            limit: parseInt(limit),
+            offset: parseInt(skip)
         })
 
-        res.status(200).json({
-            message: 'Get vehicle brands is success',
+        const totalPages = Math.ceil(totalCount / limit)
+
+        const response = {
+            total: totalCount,
+            limit: parseInt(limit),
+            skip: parseInt(skip),
+            totalPages: totalPages,
             data: vehicleBrands
+        }
+
+        res.status(200).json({
+            message: "Get vehicle brands is success",
+            response
         })
     } catch (error) {
         res.status(500).json({
@@ -86,6 +101,12 @@ const getVehicleBrandById = async (req, res) => {
             attributes: ['name', 'id']
         })
 
+        if(!vehicleBrand) {
+            return res.status(404).json({
+                message: 'Vehicle brand not found'
+            })
+        }
+
         res.status(200).json({
             message: 'Get vehicle brand is success',
             data: vehicleBrand
@@ -101,13 +122,28 @@ const getVehicleBrandById = async (req, res) => {
 // GET /vehicle-types
 const getVehicleTypes = async (req, res) => {
     try {
+        const { limit = 10, skip = 0 } = req.query
+
+        const totalCount = await VehicleType.count()
+
         const vehicleTypes = await VehicleType.findAll({
-            attributes: ['name', 'id']
+            limit: parseInt(limit),
+            offset: parseInt(skip)
         })
+
+        const totalPages = Math.ceil(totalCount / limit)
+
+        const response = {
+            total: totalCount,
+            limit: parseInt(limit),
+            skip: parseInt(skip),
+            totalPages: totalPages,
+            data: vehicleTypes
+        }
 
         res.status(200).json({
             message: 'Get vehicle types is success',
-            data: vehicleTypes
+            response
         })
     } catch (error) {
         res.status(500).json({
@@ -126,6 +162,12 @@ const getVehicleTypeById = async (req, res) => {
             attributes: ['name', 'id']
         })
 
+        if(!vehicleType) {
+            return res.status(404).json({
+                message: 'Vehicle type not found'
+            })
+        }
+
         res.status(200).json({
             message: 'Get vehicle type is success',
             data: vehicleType
@@ -141,13 +183,28 @@ const getVehicleTypeById = async (req, res) => {
 // GET /vehicle-models
 const getVehicleModels = async (req, res) => {
     try {
+        const { limit = 10, skip = 0 } = req.query
+
+        const totalCount = await VehicleModel.count()
+
         const vehicleModels = await VehicleModel.findAll({
-            attributes: ['name', 'id']
+            limit: parseInt(limit),
+            offset: parseInt(skip)
         })
+
+        const totalPages = Math.ceil(totalCount / limit)
+
+        const response = {
+            total: totalCount,
+            limit: parseInt(limit),
+            skip: parseInt(skip),
+            totalPages: totalPages,
+            data: vehicleModels
+        }
 
         res.status(200).json({
             message: 'Get vehicle models is success',
-            data: vehicleModels
+            response
         })
     } catch (error) {
         res.status(500).json({
@@ -166,6 +223,12 @@ const getVehicleModelById = async (req, res) => {
             attributes: ['name', 'id']
         })
 
+        if(!vehicleModel) {
+            return res.status(404).json({
+                message: 'Vehicle model not found'
+            })
+        }
+
         res.status(200).json({
             message: 'Get vehicle model is success',
             data: vehicleModel
@@ -181,13 +244,28 @@ const getVehicleModelById = async (req, res) => {
 // GET /vehicle-years
 const getVehicleYears = async (req, res) => {
     try {
+        const { limit = 10, skip = 0 } = req.query
+
+        const totalCount = await VehicleYear.count()
+
         const vehicleYears = await VehicleYear.findAll({
-            attributes: ['year', 'id']
+            limit: parseInt(limit),
+            offset: parseInt(skip)
         })
+
+        const totalPages = Math.ceil(totalCount / limit)
+
+        const response = {
+            total: totalCount,
+            limit: parseInt(limit),
+            skip: parseInt(skip),
+            totalPages: totalPages,
+            data: vehicleYears
+        }
 
         res.status(200).json({
             message: 'Get vehicle years is success',
-            data: vehicleYears
+            response
         })
     } catch (error) {
         res.status(500).json({
@@ -206,9 +284,40 @@ const getVehicleYearById = async (req, res) => {
             attributes: ['year', 'id']
         })
 
+        if(!vehicleYear) {
+            return res.status(404).json({
+                message: 'Vehicle year not found'
+            })
+        }
+
         res.status(200).json({
             message: 'Get vehicle year is success',
             data: vehicleYear
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// GET /pricelist/:id
+const getPricelistById = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const pricelist = await Pricelist.findByPk(id)
+
+        if(!pricelist) {
+            return res.status(404).json({
+                message: 'Pricelist not found'
+            })
+        }
+
+        res.status(200).json({
+            message: 'Get pricelist is success',
+            data: pricelist
         })
     } catch (error) {
         res.status(500).json({
@@ -227,5 +336,6 @@ module.exports = {
     getVehicleModels,
     getVehicleModelById,
     getVehicleYears,
-    getVehicleYearById
+    getVehicleYearById,
+    getPricelistById
 }

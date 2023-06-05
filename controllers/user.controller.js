@@ -1,22 +1,6 @@
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const User = require('../models/User')
-
-const generateToken = (user) => {
-    const payload = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        isAdmin: user.is_admin
-    }
-
-    const options = {
-        expiresIn: '1h',
-    }
-
-    return jwt.sign(payload, process.env.JWT_SECRET, options)
-}
+const { generateToken } = require('../middleware/auth')
 
 // POST /register
 const register = async (req, res) => {
@@ -133,15 +117,6 @@ const getUserById = async (req, res) => {
 // PATCH /users/:id
 const updateUser = async (req, res) =>  {
     try {
-        // Admin only
-        /*
-        if(!req.user.is_admin) {
-            return res.status(403).json({
-                message: 'Forbidden access'
-            })
-        }
-        */
-
         const { id } = req.params
         const { name, email, password, is_admin} = req.body
     
@@ -180,15 +155,6 @@ const updateUser = async (req, res) =>  {
 // DELETE /users/:id
 const deleteUser = async (req, res) => {
     try {
-        // Admin only
-        /*
-        if(!req.user.is_admin) {
-            return res.status(403).json({
-                message: 'Forbidden access'
-            })
-        }
-        */
-
         const { id } = req.params
         
         // Find user by ID
