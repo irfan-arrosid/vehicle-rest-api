@@ -16,7 +16,6 @@ const VehicleType = sequelize.define(
         },
         brand_id: {
             type: DataTypes.BIGINT,
-            allowNull: false,
         },
         created_at: {
             type: DataTypes.DATE,

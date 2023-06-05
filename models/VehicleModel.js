@@ -16,7 +16,6 @@ const VehicleModel = sequelize.define(
         },
         type_id: {
             type: DataTypes.BIGINT,
-            allowNull: false,
         },
         created_at: {
             type: DataTypes.DATE,

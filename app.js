@@ -5,12 +5,14 @@ require('dotenv').config()
 const sequelize = require('./config/database')
 
 const userRoutes = require('./routes/user.routes')
+const vehicleRoutes = require('./routes/vehicle.routes')
 
 // Middleware
 app.use(express.json())
 
 // Routes
 app.use('/', userRoutes)
+app.use('/', vehicleRoutes)
 
 app.get('/', (req, res) => {
     res.send('Hello World!')

@@ -13,11 +13,9 @@ const Pricelist = sequelize.define(
         },
         year_id: {
             type: DataTypes.BIGINT,
-            allowNull: false,
         },
         model_id: {
             type: DataTypes.BIGINT,
-            allowNull: false,
         },
     },
     {

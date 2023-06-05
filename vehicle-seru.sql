@@ -19,7 +19,7 @@ CREATE TABLE "vehicle_brands" (
 CREATE TABLE "vehicle_types" (
   "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
-  "brand_id" bigint NOT NULL,
+  "brand_id" bigint,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
   "updated_at" timestamptz NOT NULL DEFAULT (now())
 );
@@ -27,7 +27,7 @@ CREATE TABLE "vehicle_types" (
 CREATE TABLE "vehicle_models" (
   "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
-  "type_id" bigint NOT NULL,
+  "type_id" bigint,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
   "updated_at" timestamptz NOT NULL DEFAULT (now())
 );
@@ -41,8 +41,8 @@ CREATE TABLE "vehicle_years" (
 
 CREATE TABLE "pricelist" (
   "id" bigserial PRIMARY KEY,
-  "year_id" bigint NOT NULL,
-  "model_id" bigint NOT NULL
+  "year_id" bigint,
+  "model_id" bigint
 );
 
 CREATE INDEX ON "vehicle_brands" ("name");

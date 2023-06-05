@@ -26,7 +26,7 @@ const User = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
-        refresh_token: {
+        token: {
             type: DataTypes.TEXT,
         },
         created_at: {
