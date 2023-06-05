@@ -24,13 +24,13 @@ const createVehicle = async (req, res) => {
 
             // Input data to vehicle_types table using foreignKey
             const vehicleType = await VehicleType.create(
-                { name: typeName, brandId: vehicleBrand.brandId },
+                { name: typeName, brandId: vehicleBrand.id },
                 { transaction: t }
             )
 
             // Input data to vehicle_models table using foreignKey
             const vehicleModel = await VehicleModel.create(
-                { name: modelName, typeId: vehicleType.typeId },
+                { name: modelName, typeId: vehicleType.id },
                 { transaction: t }
             )
 
@@ -42,7 +42,7 @@ const createVehicle = async (req, res) => {
 
             // Input data to pricelist
             await Pricelist.create(
-                { yearId: vehicleYear.id, modelId: vehicleModel.modelId },
+                { yearId: vehicleYear.id, modelId: vehicleModel.id },
                 { transaction: t }
             )
         })
@@ -58,6 +58,90 @@ const createVehicle = async (req, res) => {
     }
 }
 
+// GET /vehicle-brands
+const getVehicleBrands = async (req, res) => {
+    try {
+        const vehicleBrands = await VehicleBrand.findAll({
+            attributes: ['name', 'id']
+        })
+
+        res.status(200).json({
+            message: 'Get vehicle brands is success',
+            data: vehicleBrands
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// GET /vehicle-brands/:id
+const getVehicleBrandById = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const vehicleBrand = await VehicleBrand.findByPk(id, {
+            attributes: ['name', 'id']
+        })
+
+        res.status(200).json({
+            message: 'Get vehicle brand is success',
+            data: vehicleBrand
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// GET /vehicle-types
+const getVehicleTypes = async (req, res) => {
+    try {
+        const vehicleTypes = await VehicleType.findAll({
+            attributes: ['name', 'id']
+        })
+
+        res.status(200).json({
+            message: 'Get vehicle types is success',
+            data: vehicleTypes
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// GET /vehicle-types/:id
+const getVehicleTypeById = async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const vehicleType = await VehicleType.findByPk(id, {
+            attributes: ['name', 'id']
+        })
+
+        res.status(200).json({
+            message: 'Get vehicle type is success',
+            data: vehicleType
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
 module.exports = {
-    createVehicle
+    createVehicle,
+    getVehicleBrands,
+    getVehicleBrandById,
+    getVehicleTypes,
+    getVehicleTypeById
 }
