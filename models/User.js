@@ -28,20 +28,9 @@ const User = sequelize.define(
         token: {
             type: DataTypes.TEXT,
         },
-        created_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
     },
     {
-        tableName: 'users',
-        timestamps: false,
+        tableName: 'users'
     }
 )
 

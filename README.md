@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # VEHICLE REST API
 
 ## Description:
@@ -32,3 +33,8 @@ Vehicle REST API is a project that provides API services for managing vehicle da
 - If you want to run the project in development mode, you can use the command `npm run dev` which uses nodemon to monitor changes in the source code and automatically restart the server.
 
 Enjoy using the Vehicle REST API! If you have any questions or encounter any issues, feel free to ask for further assistance.
+=======
+# vehicle-rest-api
+
+Vehicle API using REST
+>>>>>>> 3ab2314 (Fix: Modify the sequelize configuration)
