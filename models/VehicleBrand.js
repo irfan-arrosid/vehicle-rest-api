@@ -13,16 +13,6 @@ const VehicleBrand = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        created_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
     },
     {
         tableName: 'vehicle_brands',

@@ -9,22 +9,30 @@ const Pricelist = sequelize.define(
         id: {
             type: DataTypes.BIGINT,
             primaryKey: true,
-            autoIncrement: true,
+            autoIncrement: true
         },
         year_id: {
             type: DataTypes.BIGINT,
+            references: {
+                model:  VehicleYear,
+                key: 'id'
+            }
         },
         model_id: {
             type: DataTypes.BIGINT,
+            references: {
+                model:  VehicleModel,
+                key: 'id'
+            }
         },
     },
     {
         tableName: 'pricelist',
-        timestamps: false,
+        timestamps: false
     }
 )
 
-Pricelist.belongsTo(VehicleYear, { foreignKey: 'year_id' })
-Pricelist.belongsTo(VehicleModel, { foreignKey: 'model_id' })
+VehicleModel.belongsToMany(VehicleYear, {through: Pricelist})
+VehicleYear.belongsToMany(VehicleModel, {through: Pricelist})
 
 module.exports = Pricelist

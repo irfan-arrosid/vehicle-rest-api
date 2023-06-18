@@ -14,19 +14,9 @@ const VehicleType = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        brand_id: {
-            type: DataTypes.BIGINT,
-        },
-        created_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-        updated_at: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
+        // brand_id: {
+        //     type: DataTypes.BIGINT,
+        // },
     },
     {
         tableName: 'vehicle_types',
@@ -34,6 +24,7 @@ const VehicleType = sequelize.define(
     }
 )
 
-VehicleType.belongsTo(VehicleBrand, { foreignKey: 'brand_id' })
+VehicleBrand.hasMany(VehicleType, {foreignKey: 'brand_id'})
+VehicleType.belongsTo(VehicleBrand)
 
 module.exports = VehicleType
