@@ -4,10 +4,11 @@ const router = express.Router()
 const vehicleController = require('../controllers/vehicle.controller')
 
 // Vehicle Routes
-router.post('/vehicle', vehicleController.createVehicle)
+// router.post('/vehicle', vehicleController.createVehicle)
 // // vehicle-brands
-router.get('/vehicle-brands', vehicleController.getVehicleBrands)
-router.get('/vehicle-brands/:id', vehicleController.getVehicleBrandById)
+router.post('/vehicle-brands', vehicleController.createNewBrand)
+router.get('/vehicle-brands', vehicleController.getAllBrands)
+router.delete('/vehicle-brands/:id', vehicleController.deleteBrand)
 // // vehicle-types
 router.get('/vehicle-types', vehicleController.getVehicleTypes)
 router.get('/vehicle-types/:id', vehicleController.getVehicleTypeById)

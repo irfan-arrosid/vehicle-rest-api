@@ -24,7 +24,8 @@ const VehicleModel = sequelize.define(
     }
 )
 
-VehicleType.hasMany(VehicleModel, {foreignKey: 'type_id'})
+// VehicleType.hasMany(VehicleModel, {foreignKey: 'type_id'})
+VehicleType.hasMany(VehicleModel)
 VehicleModel.belongsTo(VehicleType)
 
 module.exports = VehicleModel

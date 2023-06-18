@@ -11,20 +11,24 @@ const Pricelist = sequelize.define(
             primaryKey: true,
             autoIncrement: true
         },
-        year_id: {
-            type: DataTypes.BIGINT,
-            references: {
-                model:  VehicleYear,
-                key: 'id'
-            }
-        },
-        model_id: {
-            type: DataTypes.BIGINT,
-            references: {
-                model:  VehicleModel,
-                key: 'id'
-            }
-        },
+        price: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        }
+        // year_id: {
+        //     type: DataTypes.BIGINT,
+        //     references: {
+        //         model:  VehicleYear,
+        //         key: 'id'
+        //     }
+        // },
+        // model_id: {
+        //     type: DataTypes.BIGINT,
+        //     references: {
+        //         model:  VehicleModel,
+        //         key: 'id'
+        //     }
+        // },
     },
     {
         tableName: 'pricelist',

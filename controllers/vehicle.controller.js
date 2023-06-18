@@ -1,54 +1,33 @@
-const sequelize  = require('../config/database')
-const { Sequelize } = require('sequelize')
-const conn = {}
-conn.sequelize = sequelize
-conn.Sequelize = Sequelize
-
 const VehicleBrand = require('../models/VehicleBrand')
 const VehicleType = require('../models/VehicleType')
 const VehicleModel = require('../models/VehicleModel')
 const VehicleYear = require('../models/VehicleYear')
 const Pricelist = require('../models/Pricelist')
 
-// POST /vehicle
-const createVehicle = async (req, res) => {
-    const { brandName, typeName, modelName, year } = req.body
+// POST /vehicle-brands
+const createNewBrand = async (req, res) => {
+    const { name } = req.body
 
     try {
-        await sequelize.transaction(async (t) => {
-            // Create data to vehicle_brands table
-            const [vehicleBrand] = await VehicleBrand.findOrCreate({
-                where: { name: brandName },
-                transaction: t
-            })
+        // Find brand in the database
+        const existingBrand = await VehicleBrand.findOne({ where: { name }})
 
-            // Create data to vehicle_types table using foreignKey
-            const [vehicleType] = await VehicleType.findOrCreate({
-                where: { name: typeName },
-                transaction: t
+        // Send error response if brand already exists
+        if(existingBrand) {
+            return res.status(400).json({
+                message: 'Brand already exists'
             })
+        }
 
-            // Create data to vehicle_models table using foreignKey
-            const [vehicleModel] = await VehicleModel.findOrCreate({
-                where: { name: modelName },
-                transaction: t
-            })
-
-            // Create data to vehicle_years table
-            const [vehicleYear] = await VehicleYear.findOrCreate({
-                where: { year },
-                transaction: t
-            })
-
-            // Create data to pricelist
-            await Pricelist.create(
-                { yearId: vehicleYear.yearId, modelId: vehicleModel.modelId },
-                { transaction: t }
-            )
+        // Create new brand
+        const newBrand = await VehicleBrand.create({
+            name: name
         })
 
+        // Send success response
         res.status(201).json({
-            message: 'Create vehicle is success'
+            message: 'Add brand is success',
+            data: newBrand
         })
     } catch (error) {
         res.status(500).json({
@@ -59,7 +38,7 @@ const createVehicle = async (req, res) => {
 }
 
 // GET /vehicle-brands
-const getVehicleBrands = async (req, res) => {
+const getAllBrands = async (req, res) => {
     try {
         const { limit = 10, skip = 0 } = req.query
 
@@ -81,7 +60,7 @@ const getVehicleBrands = async (req, res) => {
         }
 
         res.status(200).json({
-            message: "Get vehicle brands is success",
+            message: "Get all brands is success",
             response
         })
     } catch (error) {
@@ -92,24 +71,49 @@ const getVehicleBrands = async (req, res) => {
     }
 }
 
-// GET /vehicle-brands/:id
-const getVehicleBrandById = async (req, res) => {
+// DELETE /vehicle-brands/:id
+const deleteBrand = async (req, res) => {
     const { id } = req.params
 
     try {
-        const vehicleBrand = await VehicleBrand.findByPk(id, {
-            attributes: ['name', 'id']
-        })
+        // Find brand by ID in the database
+        const brand = await VehicleBrand.findByPk(id)
 
-        if(!vehicleBrand) {
+        // Send error response if brand not found
+        if(!brand) {
             return res.status(404).json({
-                message: 'Vehicle brand not found'
+                message: 'brand not found'
             })
         }
 
+        // Delete brand from database
+        await VehicleBrand.destroy({ where: { id }})
+
+        // Send success response
         res.status(200).json({
-            message: 'Get vehicle brand is success',
-            data: vehicleBrand
+            message: 'Brand is deleted',
+            data: brand
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server error'
+        })
+        console.error(error);
+    }
+}
+
+// POST /vehicle-types
+const createVehicleType = async (req, res) => {
+    const { name } = req.body
+
+    try {
+        const user = await VehicleType.create({
+            name: name
+        })
+
+        res.status(201).json({
+            message: 'Add vehicle brand is success',
+            data: user
         })
     } catch (error) {
         res.status(500).json({
@@ -328,9 +332,9 @@ const getPricelistById = async (req, res) => {
 }
 
 module.exports = {
-    createVehicle,
-    getVehicleBrands,
-    getVehicleBrandById,
+    createNewBrand,
+    getAllBrands,
+    deleteBrand,
     getVehicleTypes,
     getVehicleTypeById,
     getVehicleModels,
