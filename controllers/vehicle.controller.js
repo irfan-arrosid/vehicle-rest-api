@@ -103,17 +103,45 @@ const deleteBrand = async (req, res) => {
 }
 
 // POST /vehicle-types
-const createVehicleType = async (req, res) => {
-    const { name } = req.body
+const createNewType = async (req, res) => {
+    const { name, VehicleBrandId } = req.body
 
     try {
-        const user = await VehicleType.create({
-            name: name
+        // Find both type and VehicleBrandId in the database
+        const findTypeAndBrandId = await VehicleType.findOne({
+            where: {
+                name: name,
+                VehicleBrandId: VehicleBrandId
+            }
+        })
+        
+        // Send error response if type already exists
+        if(findTypeAndBrandId) {
+            return res.status(400).json({
+                message: 'Type already exists',
+            })
+        }
+
+        // Find VehicleBrandId in the database
+        const findBrandId = await VehicleBrand.findByPk(VehicleBrandId)
+
+        // Send error response if brand_id not found
+        if(!findBrandId) {
+            return res.status(404).json({
+                message: 'Brand not found'
+            })
+        }
+
+        // Create new type
+        const newType = await VehicleType.create({
+            name: name,
+            VehicleBrandId: VehicleBrandId
         })
 
+        // Send success response
         res.status(201).json({
-            message: 'Add vehicle brand is success',
-            data: user
+            message: 'Add type is success',
+            data: newType
         })
     } catch (error) {
         res.status(500).json({
@@ -124,7 +152,7 @@ const createVehicleType = async (req, res) => {
 }
 
 // GET /vehicle-types
-const getVehicleTypes = async (req, res) => {
+const getAllTypes = async (req, res) => {
     try {
         const { limit = 10, skip = 0 } = req.query
 
@@ -146,7 +174,7 @@ const getVehicleTypes = async (req, res) => {
         }
 
         res.status(200).json({
-            message: 'Get vehicle types is success',
+            message: 'Get all types is success',
             response
         })
     } catch (error) {
@@ -157,24 +185,28 @@ const getVehicleTypes = async (req, res) => {
     }
 }
 
-// GET /vehicle-types/:id
-const getVehicleTypeById = async (req, res) => {
+// DELETE /vehicle-types/:id
+const deleteType = async (req, res) => {
     const { id } = req.params
 
     try {
-        const vehicleType = await VehicleType.findByPk(id, {
-            attributes: ['name', 'id']
-        })
+        // Find type by ID in the database
+        const type = await VehicleType.findByPk(id)
 
-        if(!vehicleType) {
+        // Send error response if type not found
+        if(!type) {
             return res.status(404).json({
-                message: 'Vehicle type not found'
+                message: 'Type not found'
             })
         }
 
+        // Delete type from database
+        await VehicleType.destroy({ where: { id }})
+
+        // Send success response
         res.status(200).json({
-            message: 'Get vehicle type is success',
-            data: vehicleType
+            message: 'Type is deleted',
+            data: type
         })
     } catch (error) {
         res.status(500).json({
@@ -335,8 +367,9 @@ module.exports = {
     createNewBrand,
     getAllBrands,
     deleteBrand,
-    getVehicleTypes,
-    getVehicleTypeById,
+    createNewType,
+    getAllTypes,
+    deleteType,
     getVehicleModels,
     getVehicleModelById,
     getVehicleYears,
